@@ -33,8 +33,14 @@ def clean_test_database():
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "TRUNCATE TABLE document_chunks, documents "
-                "RESTART IDENTITY CASCADE"
+                """
+                TRUNCATE TABLE
+                    chat_messages,
+                    chat_sessions,
+                    document_chunks,
+                    documents
+                RESTART IDENTITY CASCADE
+                """
             )
 
         connection.commit()
