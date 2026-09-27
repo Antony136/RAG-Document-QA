@@ -1,22 +1,33 @@
 # RAG Document Q&A
 
-A document question-answering application built to learn and demonstrate Retrieval-Augmented Generation (RAG).
+A local Retrieval-Augmented Generation (RAG) application for asking questions about uploaded PDF documents.
 
-The application allows users to upload PDF documents and ask questions about their contents. It retrieves relevant document chunks, reranks them, and uses a local Qwen 2.5 7B model through Ollama to generate grounded answers.
+The system extracts and chunks PDF text, generates embeddings, stores them in PostgreSQL with `pgvector`, retrieves and reranks relevant chunks, and uses a local Qwen 2.5 7B model through Ollama to generate grounded answers with source information.
+
+The project was built as a practical learning project to understand how modern RAG systems are designed, evaluated, tested, and improved.
+
+---
 
 ## Architecture
 
 ```text
+                         DOCUMENT INGESTION
+
 PDF
  ↓
 Text Extraction
  ↓
 Sentence-based Chunking
  ↓
-Embeddings
+Overlapping Chunks
+ ↓
+Embedding Generation
  ↓
 PostgreSQL + pgvector
- ↓
+
+
+                         QUESTION ANSWERING
+
 User Question
  ↓
 Query Normalization
@@ -29,7 +40,7 @@ Multi-query Generation
  ↓
 Vector Search
  ↓
-Reciprocal Rank Fusion
+Reciprocal Rank Fusion (RRF)
  ↓
 Cross-encoder Reranking
  ↓
@@ -39,18 +50,28 @@ Context Construction
  ↓
 Qwen 2.5 7B
  ↓
-Answer + Sources
+Grounded Answer
+ ↓
+Sources + Page Information
 ```
+
+---
 
 ## Features
 
+### Document Ingestion
+
 * PDF document upload
-* PDF text extraction
+* PDF text extraction using `pypdf`
 * Sentence-based text chunking
 * Overlapping chunks
-* Local text embeddings using `nomic-embed-text`
-* PostgreSQL storage
-* pgvector similarity search
+* Local embedding generation
+* PostgreSQL document storage
+* PostgreSQL `pgvector` storage
+
+### Retrieval
+
+* Semantic vector search
 * Document-specific retrieval
 * Query normalization
 * Conversation-aware query rewriting
@@ -58,13 +79,46 @@ Answer + Sources
 * Multi-query retrieval
 * Reciprocal Rank Fusion (RRF)
 * Cross-encoder reranking
-* Reranking threshold for low-confidence retrieval
-* Grounded answer generation
-* Source and page information
-* Follow-up questions using conversation history
-* React frontend
-* FastAPI backend
+* Reranking confidence threshold
+* Source and page metadata
+
+### Generation
+
 * Local LLM inference using Ollama
+* Qwen 2.5 Coder 7B
+* Context-grounded answer generation
+* Refusal when relevant information cannot be found
+* Conversation-aware follow-up questions
+* Source-aware answers
+
+### Evaluation
+
+* Golden evaluation dataset
+* Recall@K
+* Precision@K
+* Hit Rate@K
+* Mean Reciprocal Rank (MRR)
+* nDCG@K
+* Answer correctness
+* Answer relevance
+* Faithfulness
+* Context relevance
+* Retrieval latency
+* Generation latency
+* End-to-end latency
+* Automated evaluation scripts
+* Automated evaluation tests
+
+### Testing
+
+* Application unit/integration tests
+* API tests
+* Retrieval tests
+* Generation tests
+* Evaluation metric tests
+* LLM judge validation tests
+
+---
 
 ## Tech Stack
 
@@ -77,24 +131,29 @@ Answer + Sources
 * psycopg
 * pypdf
 * Sentence Transformers
-* Ollama
 
 ### LLM
 
-* Qwen 2.5 Coder 7B
+**Qwen 2.5 Coder 7B**
+
+Running locally through:
+
+* Ollama
 
 ### Embedding Model
 
-* `nomic-embed-text`
+**nomic-embed-text**
 
 ### Reranker
 
-* `cross-encoder/ms-marco-MiniLM-L-6-v2`
+**cross-encoder/ms-marco-MiniLM-L-6-v2**
 
 ### Frontend
 
 * React
 * Vite
+
+---
 
 ## Project Structure
 
@@ -145,6 +204,27 @@ rag-document-qa/
 │   ├── rag.py
 │   └── main.py
 │
+├── evaluation/
+│   ├── dataset/
+│   │   └── questions.json
+│   │
+│   ├── metrics/
+│   │   └── retrieval_metrics.py
+│   │
+│   ├── generation/
+│   │   └── llm_judge.py
+│   │
+│   ├── tests/
+│   │   ├── test_retrieval_metrics.py
+│   │   └── test_llm_judge.py
+│   │
+│   ├── results/
+│   │
+│   ├── validate_dataset.py
+│   ├── run_evaluation.py
+│   ├── run_generation_evaluation.py
+│   └── run_all.py
+│
 ├── frontend/
 ├── documents/
 ├── experiments/
@@ -157,16 +237,18 @@ rag-document-qa/
 └── README.md
 ```
 
-## Setup
+---
 
-### 1. Clone the repository
+# Setup
+
+## 1. Clone the Repository
 
 ```bash
 git clone <your-repository-url>
 cd rag-document-qa
 ```
 
-### 2. Create a virtual environment
+## 2. Create a Virtual Environment
 
 ```powershell
 python -m venv .venv
@@ -178,15 +260,17 @@ Activate it:
 .venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+## 3. Install Dependencies
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-### 4. Install and start Ollama
+---
 
-Make sure Ollama is installed and running.
+## 4. Install and Start Ollama
+
+Install Ollama and make sure it is running.
 
 Pull the required models:
 
@@ -195,36 +279,52 @@ ollama pull qwen2.5-coder:7b
 ollama pull nomic-embed-text
 ```
 
-### 5. Configure PostgreSQL
+The reranker model is loaded through Sentence Transformers when required.
 
-Create a PostgreSQL database with pgvector enabled.
+---
 
-Example:
+## 5. Configure PostgreSQL
+
+Create a PostgreSQL database:
 
 ```sql
 CREATE DATABASE rag_document_qa;
 ```
 
-Connect to the database and enable pgvector:
+Connect to the database and enable `pgvector`:
 
 ```sql
 CREATE EXTENSION vector;
 ```
 
-Create the required tables according to the database schema used by the application.
+Create the required tables according to the schema used by the application.
 
-### 6. Configure environment variables
+The database stores:
+
+* Documents
+* Document chunks
+* Embeddings
+* Chunk metadata
+
+---
+
+## 6. Configure Environment Variables
 
 Create a `.env` file:
 
 ```env
 DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/rag_document_qa
+
 DATABASE_URL_TEST=postgresql://postgres:YOUR_PASSWORD@localhost:5432/rag_document_qa_test
 ```
 
-Do not commit `.env` to GitHub.
+> Do not commit `.env` to GitHub.
 
-## Running the Backend
+---
+
+# Running the Application
+
+## Backend
 
 From the project root:
 
@@ -238,94 +338,362 @@ The backend normally runs at:
 http://127.0.0.1:8000
 ```
 
-## Running the Frontend
+---
+
+## Frontend
 
 Open another terminal:
 
 ```powershell
 cd frontend
+
 npm install
 npm run dev
 ```
 
-Then open the Vite development URL shown in the terminal.
+Open the Vite development URL shown in the terminal.
 
-## Testing
+---
 
-Run the complete test suite:
+# RAG Pipeline
 
-```powershell
-pytest
+The application follows a complete RAG pipeline.
+
+### 1. Document Ingestion
+
+A PDF is uploaded and its text is extracted.
+
+### 2. Chunking
+
+The extracted text is divided into smaller overlapping sentence-based chunks.
+
+### 3. Embeddings
+
+Each chunk is converted into a vector representation using:
+
+```text
+nomic-embed-text
 ```
 
-The project currently has:
+### 4. Vector Storage
 
-* 69 passing tests
-* 2 dependency deprecation warnings
+Embeddings and metadata are stored in PostgreSQL using `pgvector`.
 
-The warnings do not currently cause test failures.
+### 5. Query Processing
 
-## RAG Evaluation
+Before retrieval, the user's question can go through:
 
-The project also contains retrieval and answer evaluation experiments.
+```text
+Normalization
+      ↓
+Conversation-aware rewriting
+      ↓
+Spelling correction
+```
 
-The retrieval evaluation measures:
+### 6. Multi-query Retrieval
+
+Multiple search queries are generated from the processed question to improve retrieval coverage.
+
+### 7. Vector Search
+
+Each query searches the PostgreSQL vector database for semantically similar chunks.
+
+### 8. Reciprocal Rank Fusion
+
+Results from the different generated queries are combined using Reciprocal Rank Fusion (RRF).
+
+### 9. Cross-encoder Reranking
+
+The retrieved candidates are reranked using:
+
+```text
+cross-encoder/ms-marco-MiniLM-L-6-v2
+```
+
+### 10. Confidence Threshold
+
+Low-confidence retrieval results can be rejected using the reranking threshold.
+
+### 11. Context Construction
+
+The highest-ranked chunks are formatted into the context supplied to the LLM.
+
+### 12. Answer Generation
+
+Qwen 2.5 Coder 7B generates an answer using the retrieved context.
+
+The model is instructed to avoid using information outside the supplied document context.
+
+---
+
+# Testing
+
+The project separates **application testing** from **evaluation-code testing**.
+
+## Application Tests
+
+Run:
+
+```powershell
+pytest tests -q
+```
+
+The current application test suite contains:
+
+```text
+115 passed
+2 dependency warnings
+```
+
+The warnings are dependency deprecation warnings and do not currently cause test failures.
+
+---
+
+## Evaluation Tests
+
+Evaluation code has its own tests:
+
+```powershell
+pytest evaluation/tests -q
+```
+
+The current evaluation test suite contains:
+
+```text
+18 passed
+```
+
+These tests verify the correctness of evaluation components such as:
+
+* Recall
+* Precision
+* Hit Rate
+* MRR
+* nDCG
+* LLM judge validation
+
+---
+
+# RAG Evaluation
+
+The project contains a dedicated evaluation pipeline rather than relying only on manually checking answers.
+
+A golden dataset containing **40 questions** was created from the documents currently stored in the database.
+
+The dataset contains questions covering:
+
+* MLOps
+* Generative AI / RAG
+* Social Network Engineering
+* CSE curriculum material
+
+Each question contains:
+
+* Question
+* Expected answer
+* Relevant document chunks
+* Document ID
+* Difficulty
+* Category
+
+---
+
+## Retrieval Metrics
+
+The retrieval evaluator measures:
 
 * Recall@1
 * Recall@3
 * Recall@5
-* Mean Reciprocal Rank (MRR)
+* Recall@10
+* Precision@1
+* Precision@3
+* Precision@5
+* Precision@10
+* Hit Rate@1
+* Hit Rate@3
+* Hit Rate@5
+* Hit Rate@10
+* nDCG@1
+* nDCG@3
+* nDCG@5
+* nDCG@10
+* MRR
 
-The answer evaluation checks whether generated claims are supported by the retrieved context.
+These metrics measure different aspects of retrieval quality, including whether relevant chunks are retrieved and how highly they are ranked.
 
-The latest grounding evaluation tested:
+---
 
-* 5 questions
-* 13 expected claims
-* 12 supported claims
-* 1 unsupported claim
-* 92.31% grounding score
+## Generation Metrics
 
-These evaluations are based on a small development dataset and are intended for learning and experimentation rather than production benchmarking.
+Generated answers are additionally evaluated using an LLM judge.
 
-## Generation Verification
+The current evaluation measures:
 
-The project includes:
+* Answer correctness
+* Answer relevance
+* Faithfulness
+* Context relevance
+
+Each dimension is scored from **1 to 5**.
+
+The generation evaluation uses the same local Qwen model family for judging, so these scores should be interpreted as an **internal evaluation signal**, not as an objective human benchmark.
+
+---
+
+# Latest Evaluation Results
+
+The latest complete evaluation was performed on:
 
 ```text
-experiments/generation_test.py
+40 questions
+951 document chunks
 ```
 
-This verifies two important behaviors:
+## Retrieval
 
-1. The model can answer when the information exists in the supplied context.
-2. The model refuses to answer when the requested information is not present in the context.
+| Metric       |  Score |
+| ------------ | -----: |
+| Recall@1     | 0.3267 |
+| Recall@3     | 0.5713 |
+| Recall@5     | 0.7688 |
+| Recall@10    | 0.7800 |
+| Precision@1  | 0.5500 |
+| Precision@3  | 0.3417 |
+| Precision@5  | 0.2750 |
+| Precision@10 | 0.2265 |
+| Hit Rate@1   | 0.5500 |
+| Hit Rate@3   | 0.7750 |
+| Hit Rate@5   | 0.9000 |
+| Hit Rate@10  | 0.9250 |
+| nDCG@1       | 0.5500 |
+| nDCG@3       | 0.5612 |
+| nDCG@5       | 0.6397 |
+| nDCG@10      | 0.6460 |
+| MRR          | 0.6823 |
 
-Example behavior:
+For example, a Hit Rate@5 of `0.9000` means that **36 of the 40 evaluated questions had at least one expected relevant chunk within the top 5 retrieved results**.
+
+---
+
+## Generation
+
+| Metric            |    Score |
+| ----------------- | -------: |
+| Correctness       | 4.75 / 5 |
+| Relevance         | 4.92 / 5 |
+| Faithfulness      | 4.70 / 5 |
+| Context Relevance | 4.85 / 5 |
+
+These scores are generated by the project's local LLM judge and are intended as an internal engineering signal.
+
+---
+
+## Latency
+
+| Stage                              |     Average |
+| ---------------------------------- | ----------: |
+| Retrieval                          |  3537.70 ms |
+| Generation                         |  7844.04 ms |
+| LLM Judge                          | 10939.26 ms |
+| Total evaluation time per question | 22321.00 ms |
+
+The LLM judge is substantially slower than normal answer generation because every evaluated answer requires an additional model call.
+
+---
+
+# Running Evaluation
+
+## Validate the Golden Dataset
+
+```powershell
+python -m evaluation.validate_dataset
+```
+
+---
+
+## Retrieval Evaluation
+
+```powershell
+python -m evaluation.run_evaluation
+```
+
+---
+
+## Generation Evaluation
+
+```powershell
+python -m evaluation.run_generation_evaluation
+```
+
+A smaller evaluation can be run during development:
+
+```powershell
+python -m evaluation.run_generation_evaluation --limit 5
+```
+
+---
+
+## Complete Project Verification
+
+The project provides a single command that runs the complete verification pipeline:
+
+```powershell
+python -m evaluation.run_all
+```
+
+It performs:
 
 ```text
-Context contains the answer
-        ↓
-Grounded answer
+Dataset Validation
+       ↓
+Retrieval Evaluation
+       ↓
+Generation Evaluation
+       ↓
+Application Tests
+       ↓
+Evaluation Tests
 ```
 
-and:
+This makes it possible to verify the project from one command after making changes.
 
-```text
-Context does not contain the answer
-        ↓
-"I could not find the answer in the document."
-```
+---
 
-## Learning Goals
+# Evaluation Limitations
 
-This project was built as a practical learning project covering:
+The evaluation results should not be interpreted as production-grade benchmarking.
+
+The current evaluation has several limitations:
+
+* The golden dataset contains 40 questions.
+* Relevant chunks were manually annotated.
+* Generation quality is evaluated using an LLM judge.
+* The generator and judge use the same local Qwen model family.
+* Latency depends heavily on the local hardware and model configuration.
+* The evaluation corpus represents the documents currently loaded into the project database.
+* Retrieval metrics measure performance against the current manually annotated dataset rather than a universal RAG benchmark.
+
+The purpose of this evaluation is to establish a reproducible internal baseline and provide measurable feedback while developing the RAG system.
+
+---
+
+# Learning Goals
+
+This project was built to gain practical experience with:
 
 * Retrieval-Augmented Generation
+* Document ingestion
+* Text chunking
 * Embeddings
 * Vector databases
+* PostgreSQL
+* pgvector
 * Semantic search
-* Query transformation
+* Query normalization
+* Query rewriting
+* Query correction
 * Multi-query retrieval
 * Reciprocal Rank Fusion
 * Cross-encoder reranking
@@ -333,37 +701,84 @@ This project was built as a practical learning project covering:
 * Local LLM inference
 * FastAPI
 * React
-* PostgreSQL
 * Automated testing
-* RAG evaluation
+* Retrieval evaluation
+* Generation evaluation
+* LLM-as-a-judge evaluation
+* Latency measurement
 
-## Project Status
+---
 
-Project 2 is functionally complete.
+# Project Status
 
-The complete flow has been manually verified from:
+**Project 2 — RAG Document Q&A is functionally complete and evaluated.**
+
+The complete application flow has been verified:
 
 ```text
-PDF upload
- → ingestion
- → embedding
- → vector storage
- → retrieval
- → reranking
- → context construction
- → LLM generation
- → grounded answer
- → source display
+PDF Upload
+    ↓
+Text Extraction
+    ↓
+Chunking
+    ↓
+Embedding
+    ↓
+Vector Storage
+    ↓
+Query Processing
+    ↓
+Multi-query Retrieval
+    ↓
+RRF
+    ↓
+Cross-encoder Reranking
+    ↓
+Context Construction
+    ↓
+LLM Generation
+    ↓
+Grounded Answer
+    ↓
+Source Display
 ```
 
-## Next Project
+The project now has:
+
+* Complete RAG pipeline
+* Local LLM inference
+* Multi-stage retrieval
+* Reranking
+* Conversation-aware querying
+* Automated application tests
+* Dedicated evaluation tests
+* Golden evaluation dataset
+* Retrieval metrics
+* Generation quality evaluation
+* Latency measurement
+* One-command evaluation
+
+---
+
+# Next Project
 
 This project is part of a progressive AI engineering learning path:
 
 ```text
-Project 1 → LLM Playground
-Project 2 → RAG Document Q&A
-Project 3 → Agents and Tool Calling
-Project 4 → AI Full-Stack Application
-Project 5 → Advanced AI System
+Project 1
+LLM Playground
+      ↓
+Project 2
+RAG Document Q&A
+      ↓
+Project 3
+Agents + Tool Calling
+      ↓
+Project 4
+AI Full-Stack Application
+      ↓
+Project 5
+Advanced AI System
 ```
+
+The goal of this progression is to move from understanding individual LLM capabilities to building complete AI systems involving retrieval, tools, agents, APIs, evaluation, and production-oriented architecture.

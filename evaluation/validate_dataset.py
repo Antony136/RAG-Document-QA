@@ -3,8 +3,7 @@ import json
 from app.core.database import get_connection
 
 
-DATASET_PATH = "experiments/evaluation/dataset/questions.json"
-
+DATASET_PATH = "evaluation/dataset/questions.json"
 
 def load_dataset():
     with open(DATASET_PATH, "r", encoding="utf-8") as file:
