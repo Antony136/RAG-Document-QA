@@ -109,6 +109,7 @@ def retrieve_context(
     final_top_n: int = 5,
     max_distance: float = 0.50,
     conversation: list[dict] | None = None,
+    apply_threshold: bool = True,
 ):
     if conversation is None:
         conversation = []
@@ -301,7 +302,7 @@ def retrieve_context(
         f"{best_score >= RERANK_THRESHOLD}"
     )
 
-    if best_score < RERANK_THRESHOLD:
+    if apply_threshold and best_score < RERANK_THRESHOLD:
         print("RESULT REJECTED BY RERANKER")
 
         return (

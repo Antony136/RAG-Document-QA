@@ -1,0 +1,729 @@
+[
+  {
+    "id": "M01",
+    "document_id": 36,
+    "question": "What information should be stored as metadata for each model version?",
+    "expected_answer": "Model version metadata should include the model name and version, training dataset and its version, algorithm, hyperparameters, code version, feature engineering version, evaluation metrics, dependencies, training date, author, and deployment status.",
+    "relevant_chunks": [
+      {
+        "page": 1,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "model_versioning"
+  },
+  {
+    "id": "M02",
+    "document_id": 36,
+    "question": "How does model versioning support reproducibility?",
+    "expected_answer": "Model versioning records the information needed to identify and reproduce a model, including its training data, code, configuration, dependencies, and related experiment information.",
+    "relevant_chunks": [
+      {
+        "page": 2,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "easy",
+    "category": "model_versioning"
+  },
+  {
+    "id": "M03",
+    "document_id": 36,
+    "question": "How does rollback help when a newly deployed model performs poorly?",
+    "expected_answer": "Rollback allows the system to return to a previous known model version when a newly deployed model performs poorly. This helps restore a stable version while the problematic version is investigated.",
+    "relevant_chunks": [
+      {
+        "page": 3,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "easy",
+    "category": "model_versioning"
+  },
+  {
+    "id": "M04",
+    "document_id": 36,
+    "question": "How does AutoML automate the traditional machine learning development process?",
+    "expected_answer": "AutoML automates parts of the machine learning workflow such as preprocessing, feature engineering, algorithm selection, hyperparameter optimization, and model evaluation instead of requiring each step to be performed manually.",
+    "relevant_chunks": [
+      {
+        "page": 4,
+        "chunk_index": 2
+      },
+      {
+        "page": 5,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "automl"
+  },
+  {
+    "id": "M05",
+    "document_id": 36,
+    "question": "How can AutoML support automated retraining in an MLOps pipeline?",
+    "expected_answer": "AutoML can integrate with an MLOps workflow so that model selection and training can be automated and retraining can be triggered when required, reducing manual development effort.",
+    "relevant_chunks": [
+      {
+        "page": 6,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "automl"
+  },
+  {
+    "id": "M06",
+    "document_id": 36,
+    "question": "What are the respective responsibilities of Elasticsearch, Logstash, and Kibana in the ELK Stack?",
+    "expected_answer": "Logstash collects and processes logs, Elasticsearch stores and indexes the processed log data for searching and analysis, and Kibana provides visualization and dashboards for the stored data.",
+    "relevant_chunks": [
+      {
+        "page": 10,
+        "chunk_index": 1
+      },
+      {
+        "page": 11,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "elk"
+  },
+  {
+    "id": "M07",
+    "document_id": 36,
+    "question": "How can the ELK Stack help identify a model degradation problem?",
+    "expected_answer": "ELK can collect and analyze system, model, and data-quality logs. These logs can be searched and visualized to identify abnormal behavior or changes that may indicate model degradation.",
+    "relevant_chunks": [
+      {
+        "page": 14,
+        "chunk_index": 1
+      },
+      {
+        "page": 15,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "elk"
+  },
+  {
+    "id": "M08",
+    "document_id": 36,
+    "question": "How does Prometheus monitor and alert on machine learning model performance problems?",
+    "expected_answer": "Prometheus collects metrics such as latency, throughput, errors, resource usage, and model-related metrics. It stores these time-series metrics and can use alerting rules to notify when specified conditions or thresholds are reached.",
+    "relevant_chunks": [
+      {
+        "page": 18,
+        "chunk_index": 1
+      },
+      {
+        "page": 19,
+        "chunk_index": 1
+      },
+      {
+        "page": 20,
+        "chunk_index": 1
+      },
+      {
+        "page": 21,
+        "chunk_index": 1
+      },
+      {
+        "page": 22,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "hard",
+    "category": "prometheus"
+  },
+
+  {
+    "id": "G01",
+    "document_id": 37,
+    "question": "What problem does RAG solve when an LLM needs information from private or recently updated documents?",
+    "expected_answer": "RAG allows an LLM to retrieve relevant information from an external document collection at inference time, providing information that may not be present in the model's learned knowledge.",
+    "relevant_chunks": [
+      {
+        "page": 2,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "rag"
+  },
+  {
+    "id": "G02",
+    "document_id": 37,
+    "question": "Why can sending an entire long document to an LLM for every question be inefficient?",
+    "expected_answer": "Long documents consume many tokens and can approach or exceed the model's context window. Processing the entire document for every question also wastes computation when only a small portion is relevant.",
+    "relevant_chunks": [
+      {
+        "page": 2,
+        "chunk_index": 5
+      },
+      {
+        "page": 2,
+        "chunk_index": 6
+      }
+    ],
+    "difficulty": "easy",
+    "category": "rag"
+  },
+  {
+    "id": "G03",
+    "document_id": 37,
+    "question": "Describe the main stages of a RAG pipeline from ingestion to answer generation.",
+    "expected_answer": "The RAG pipeline ingests documents, processes and chunks their content, creates embeddings and stores the indexed information, retrieves relevant chunks for a query, assembles the retrieved context, and provides that context to the LLM to generate the answer.",
+    "relevant_chunks": [
+      {
+        "page": 2,
+        "chunk_index": 8
+      }
+    ],
+    "difficulty": "easy",
+    "category": "rag"
+  },
+  {
+    "id": "G04",
+    "document_id": 37,
+    "question": "How does RAG differ from fine-tuning in terms of where new knowledge is supplied?",
+    "expected_answer": "RAG supplies relevant external information during inference by retrieving documents or chunks and placing them in the model context. Fine-tuning changes the model through additional training on data.",
+    "relevant_chunks": [
+      {
+        "page": 2,
+        "chunk_index": 9
+      }
+    ],
+    "difficulty": "easy",
+    "category": "rag"
+  },
+  {
+    "id": "G05",
+    "document_id": 37,
+    "question": "Why is there no universally optimal chunk size for document retrieval?",
+    "expected_answer": "Chunk size involves trade-offs. Smaller chunks can provide more focused retrieval but may lose surrounding context, while larger chunks preserve more context but can introduce irrelevant information and reduce retrieval precision. Chunk overlap can also affect how much surrounding information is preserved.",
+    "relevant_chunks": [
+      {
+        "page": 3,
+        "chunk_index": 6
+      },
+      {
+        "page": 3,
+        "chunk_index": 7
+      }
+    ],
+    "difficulty": "medium",
+    "category": "chunking"
+  },
+  {
+    "id": "G06",
+    "document_id": 37,
+    "question": "What happens if the indexed collection uses an incompatible embedding model later?",
+    "expected_answer": "Embeddings generated by incompatible models may not be directly comparable. The collection may need to be regenerated and reindexed using the compatible embedding model before similarity search can work correctly.",
+    "relevant_chunks": [
+      {
+        "page": 4,
+        "chunk_index": 2
+      },
+      {
+        "page": 4,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "medium",
+    "category": "embeddings"
+  },
+  {
+    "id": "G07",
+    "document_id": 37,
+    "question": "Why should citations come from stored chunk metadata rather than being generated by the LLM?",
+    "expected_answer": "Citations should be based on stored chunk metadata so that the source information is traceable to the actual retrieved content. The LLM should not be responsible for inventing or determining source references.",
+    "relevant_chunks": [
+      {
+        "page": 5,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "medium",
+    "category": "citations"
+  },
+  {
+    "id": "G08",
+    "document_id": 37,
+    "question": "If the correct passage is retrieved but the answer ignores or contradicts it, which part of the RAG system should be investigated?",
+    "expected_answer": "The generation stage should be investigated because the relevant passage was successfully retrieved, but the generated answer failed to use or follow the provided context. The system should distinguish retrieval problems from generation problems.",
+    "relevant_chunks": [
+      {
+        "page": 5,
+        "chunk_index": 4
+      },
+      {
+        "page": 5,
+        "chunk_index": 5
+      }
+    ],
+    "difficulty": "medium",
+    "category": "rag_failure_modes"
+  },
+  {
+    "id": "G09",
+    "document_id": 37,
+    "question": "Why is hybrid retrieval useful for technical documents containing exact error codes?",
+    "expected_answer": "Hybrid retrieval combines different retrieval approaches so that semantic similarity can capture meaning while lexical retrieval can match exact terms such as error codes. This is useful for technical documentation where exact strings can be important.",
+    "relevant_chunks": [
+      {
+        "page": 6,
+        "chunk_index": 3
+      },
+      {
+        "page": 9,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "medium",
+    "category": "retrieval"
+  },
+  {
+    "id": "G10",
+    "document_id": 37,
+    "question": "Why is hiding a confidential citation after generation insufficient to protect sensitive information?",
+    "expected_answer": "Authorization should happen before confidential content is placed into the model context. Removing or hiding the citation after generation does not prevent the confidential information from already being provided to or potentially reproduced by the model.",
+    "relevant_chunks": [
+      {
+        "page": 6,
+        "chunk_index": 1
+      },
+      {
+        "page": 10,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "hard",
+    "category": "rag_security"
+  },
+
+  {
+    "id": "S01",
+    "document_id": 38,
+    "question": "What is meant by enabling new human experiences in social networks, and what technologies support it?",
+    "expected_answer": "The material connects new human experiences in social networks with technologies such as Social Networks, Reality Mining, and Context-Awareness, along with emerging technologies discussed in social network engineering.",
+    "relevant_chunks": [
+      {
+        "page": 1,
+        "chunk_index": 1
+      },
+      {
+        "page": 17,
+        "chunk_index": 1
+      },
+      {
+        "page": 17,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "social_network_engineering"
+  },
+  {
+    "id": "S02",
+    "document_id": 38,
+    "question": "How does user data management transform collected user information into useful knowledge?",
+    "expected_answer": "User data management involves handling collected user information and processing it so that the resulting information can support useful knowledge and further inference or analysis.",
+    "relevant_chunks": [
+      {
+        "page": 8,
+        "chunk_index": 1
+      },
+      {
+        "page": 8,
+        "chunk_index": 2
+      },
+      {
+        "page": 9,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "user_data_management"
+  },
+  {
+    "id": "S03",
+    "document_id": 38,
+    "question": "What are the three types of context used for inference in social communities?",
+    "expected_answer": "The three contexts described are real-time context, historical context, and reasoned context.",
+    "relevant_chunks": [
+      {
+        "page": 11,
+        "chunk_index": 2
+      },
+      {
+        "page": 12,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "easy",
+    "category": "inference"
+  },
+  {
+    "id": "S04",
+    "document_id": 38,
+    "question": "How does layered reasoning help a system understand and predict human behaviour?",
+    "expected_answer": "Layered reasoning progresses through stages of reasoning using available context and information, with later stages supporting prediction or inference about human behaviour.",
+    "relevant_chunks": [
+      {
+        "page": 13,
+        "chunk_index": 2
+      },
+      {
+        "page": 14,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "inference"
+  },
+  {
+    "id": "S05",
+    "document_id": 38,
+    "question": "How do social networks, reality mining, and context-awareness work together to provide personalized services?",
+    "expected_answer": "Social networks provide social information, reality mining gathers information about real-world activity, and context-awareness uses contextual information to understand the user's situation. Together these technologies support more personalized services and experiences.",
+    "relevant_chunks": [
+      {
+        "page": 17,
+        "chunk_index": 1
+      },
+      {
+        "page": 19,
+        "chunk_index": 1
+      },
+      {
+        "page": 19,
+        "chunk_index": 2
+      },
+      {
+        "page": 20,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "emerging_technologies"
+  },
+  {
+    "id": "S06",
+    "document_id": 38,
+    "question": "How does authentication differ from authorization in a social network?",
+    "expected_answer": "Authentication verifies the identity of a user, while authorization determines what an authenticated user is allowed to access or perform.",
+    "relevant_chunks": [
+      {
+        "page": 26,
+        "chunk_index": 1
+      },
+      {
+        "page": 26,
+        "chunk_index": 2
+      },
+      {
+        "page": 27,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "authentication_authorization"
+  },
+  {
+    "id": "S07",
+    "document_id": 38,
+    "question": "How can RBAC control access to resources in a social network?",
+    "expected_answer": "RBAC assigns permissions to roles and assigns users to those roles. Access is then controlled according to the permissions associated with the user's role, rather than assigning every permission directly to each user.",
+    "relevant_chunks": [
+      {
+        "page": 32,
+        "chunk_index": 1
+      },
+      {
+        "page": 32,
+        "chunk_index": 2
+      },
+      {
+        "page": 34,
+        "chunk_index": 1
+      },
+      {
+        "page": 38,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "rbac"
+  },
+  {
+    "id": "S08",
+    "document_id": 38,
+    "question": "Why should a social-network database not be directly accessible from the public Internet, and what firewall rules help enforce this?",
+    "expected_answer": "The database should be isolated from direct public access to reduce security exposure. Firewall rules can restrict which hosts, networks, ports, and services are allowed to communicate with the database while allowing only required application traffic.",
+    "relevant_chunks": [
+      {
+        "page": 48,
+        "chunk_index": 1
+      },
+      {
+        "page": 49,
+        "chunk_index": 1
+      },
+      {
+        "page": 49,
+        "chunk_index": 2
+      },
+      {
+        "page": 50,
+        "chunk_index": 1
+      },
+      {
+        "page": 50,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "hard",
+    "category": "firewalls"
+  },
+
+  {
+    "id": "C01",
+    "document_id": 39,
+    "question": "What are the main objectives of the Web Application Development and Deployment course?",
+    "expected_answer": "The course covers internet standards and protocols, HTML and CSS, client-side scripting, XML, server-side programming, and MVC architecture.",
+    "relevant_chunks": [
+      {
+        "page": 286,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "easy",
+    "category": "web_development"
+  },
+  {
+    "id": "C02",
+    "document_id": 39,
+    "question": "What topics are covered under client-side scripting in Web Application Development?",
+    "expected_answer": "Client-side scripting includes JavaScript variables, literals, operators, control structures, arrays, functions, objects, form validation, events, regular expressions, jQuery, AJAX, and asynchronous communication.",
+    "relevant_chunks": [
+      {
+        "page": 286,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "web_development"
+  },
+  {
+    "id": "C03",
+    "document_id": 39,
+    "question": "What are the main components of the MVC architecture covered in the Web Application Development course?",
+    "expected_answer": "The MVC topics include the MVC framework and pattern, controllers, views, routing, configuration, layouts, URL arguments, redirects, forms and POST handling, model classes, database connections, and database operations such as insert, fetch, delete, and update.",
+    "relevant_chunks": [
+      {
+        "page": 287,
+        "chunk_index": 1
+      }
+    ],
+    "difficulty": "medium",
+    "category": "web_development"
+  },
+  {
+    "id": "C04",
+    "document_id": 39,
+    "question": "How does the C# and .NET Framework course cover database connectivity?",
+    "expected_answer": "The course covers ADO.NET database connectivity, including providers, opening and closing connections, Command, Data Adapter, Dataset, Data Tables, Data Views, and data binding.",
+    "relevant_chunks": [
+      {
+        "page": 289,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "medium",
+    "category": "dotnet"
+  },
+  {
+    "id": "C05",
+    "document_id": 39,
+    "question": "What are the main levels of software testing listed in the Software Testing and Quality Assurance course?",
+    "expected_answer": "The testing levels listed are Unit Testing, Integration Testing, System Testing, and Acceptance Testing.",
+    "relevant_chunks": [
+      {
+        "page": 295,
+        "chunk_index": 2
+      }
+    ],
+    "difficulty": "easy",
+    "category": "software_testing"
+  },
+  {
+    "id": "C06",
+    "document_id": 39,
+    "question": "What topics are included in Software Quality Assurance?",
+    "expected_answer": "Software Quality Assurance includes quality definitions and factors, SQA components, pre-project quality assurance, contract review, development and quality plans, lifecycle integration, QA techniques, monitoring and measurement, quality standards, organizational roles, and Six Sigma.",
+    "relevant_chunks": [
+      {
+        "page": 295,
+        "chunk_index": 3
+      },
+      {
+        "page": 295,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "medium",
+    "category": "software_quality"
+  },
+  {
+    "id": "C07",
+    "document_id": 39,
+    "question": "What concepts are covered in Advanced User Interface Technologies for React development?",
+    "expected_answer": "The React topics include React platforms and frameworks, hybrid and native approaches, the development environment, React internals, JSX, components, styling, React Router, route parameters, and single-page applications.",
+    "relevant_chunks": [
+      {
+        "page": 301,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "easy",
+    "category": "react"
+  },
+  {
+    "id": "C08",
+    "document_id": 39,
+    "question": "How are controlled and uncontrolled forms, Redux, and client-server communication connected in the Advanced UI course?",
+    "expected_answer": "The course covers controlled and uncontrolled forms and validation, then introduces Flux and Redux concepts including actions and reducers and React Redux forms. It also covers client-server communication using Fetch and building and deploying a React application.",
+    "relevant_chunks": [
+      {
+        "page": 301,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "medium",
+    "category": "react"
+  },
+  {
+    "id": "C09",
+    "document_id": 39,
+    "question": "What technologies are identified as part of the Web 3.0 and Metaverse course?",
+    "expected_answer": "The course discusses Web 3.0, the Metaverse, immersive experiences, AR, VR, MR, AI, blockchain, smart contracts, tokens, NFTs, cryptocurrencies, and DAO-related concepts.",
+    "relevant_chunks": [
+      {
+        "page": 304,
+        "chunk_index": 3
+      },
+      {
+        "page": 304,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "easy",
+    "category": "web3_metaverse"
+  },
+  {
+    "id": "C10",
+    "document_id": 39,
+    "question": "What role does blockchain play in the Web 3.0 and Metaverse curriculum?",
+    "expected_answer": "The curriculum covers blockchain concepts such as decentralization and smart contracts and discusses blockchain applications in the Metaverse, including tokens, NFTs, cryptocurrencies, and related digital assets.",
+    "relevant_chunks": [
+      {
+        "page": 304,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "medium",
+    "category": "web3_metaverse"
+  },
+  {
+    "id": "C11",
+    "document_id": 39,
+    "question": "What are the main areas covered by the Python Programming course?",
+    "expected_answer": "The course covers Python algorithms and basics, functions and strings, lists, tuples, sets and dictionaries, files, modules and packages, database programming, and data visualization using tools such as NumPy and Matplotlib.",
+    "relevant_chunks": [
+      {
+        "page": 338,
+        "chunk_index": 1
+      },
+      {
+        "page": 338,
+        "chunk_index": 2
+      },
+      {
+        "page": 338,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "easy",
+    "category": "python"
+  },
+  {
+    "id": "C12",
+    "document_id": 39,
+    "question": "What database operations are included in the Python Programming course?",
+    "expected_answer": "The database programming topics include connecting to a database, creating tables, inserting records, updating and deleting data, reading data, handling transactions, and disconnecting from the database.",
+    "relevant_chunks": [
+      {
+        "page": 338,
+        "chunk_index": 3
+      }
+    ],
+    "difficulty": "medium",
+    "category": "python"
+  },
+  {
+    "id": "C13",
+    "document_id": 39,
+    "question": "What topics are covered in the Artificial Intelligence Basics course?",
+    "expected_answer": "The course covers AI principles, intelligent agents, problem solving, knowledge representation and reasoning, decision making, planning, perception and action, search, ontology and logic, reasoning under uncertainty, strategic reasoning and multi-agent systems, decision theory, metaheuristics, expert systems, and fuzzy logic.",
+    "relevant_chunks": [
+      {
+        "page": 342,
+        "chunk_index": 1
+      },
+      {
+        "page": 342,
+        "chunk_index": 2
+      },
+      {
+        "page": 342,
+        "chunk_index": 3
+      },
+      {
+        "page": 342,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "medium",
+    "category": "artificial_intelligence"
+  },
+  {
+    "id": "C14",
+    "document_id": 39,
+    "question": "What are the major components of the Introduction to Cloud and Big Data Analytics course?",
+    "expected_answer": "The course covers cloud computing fundamentals, infrastructure, virtualization, cloud security, big data concepts, Hadoop and HDFS, MapReduce, Google App Engine, Google File System, and BigTable.",
+    "relevant_chunks": [
+      {
+        "page": 348,
+        "chunk_index": 1
+      },
+      {
+        "page": 348,
+        "chunk_index": 2
+      },
+      {
+        "page": 348,
+        "chunk_index": 3
+      },
+      {
+        "page": 348,
+        "chunk_index": 4
+      }
+    ],
+    "difficulty": "hard",
+    "category": "cloud_big_data"
+  }
+]
